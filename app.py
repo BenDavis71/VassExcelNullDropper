@@ -4,10 +4,10 @@ from io import BytesIO
 from pyxlsb import open_workbook as open_xlsb
 import streamlit as st
 
-
-st.title('Vass's Excel Null Dropper')
+st.title("Vass's Excel Null Dropper")
 #st.markdown("_Let's get educated brother_")
 st.markdown("_Drops entirely blank columns from Excel files_")
+st.image('https://pbs.twimg.com/profile_images/1360296036498087937/CCh-b8wJ_400x400.jpg')
 
 def to_excel(df):
     output = BytesIO()
@@ -21,16 +21,19 @@ def to_excel(df):
     processed_data = output.getvalue()
     return processed_data         
 
-uploaded_file = st.file_uploader(“Choose a file”,type=['xlsx'],accept_multiple_files=False)
+uploaded_file = st.file_uploader("Choose your Excel file",type=['xlsx'],accept_multiple_files=False)
 if uploaded_file is not None:
-  #read excel
-  df=pd.read_excel(uploaded_file)
+    #read excel
+    df=pd.read_excel(uploaded_file)
+    
+    #drop null columns
+    df = df.dropna(axis=1, how = 'all')
 
 
-df_xlsx = to_excel(df)
-st.download_button(label='📥 Download ',
-                                data=df_xlsx ,
-                                file_name= f'{uploaded_file.name}')
+    df_xlsx = to_excel(df)
+    st.download_button(label='📥 Download ',
+                                    data=df_xlsx ,
+                                    file_name= f'{uploaded_file.name}')
 
 
 
